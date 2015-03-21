@@ -1,0 +1,32 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<div id="lamp">OFF</div>
+
+<button id="streamon" onclick="streamon()">ON</button>
+<button id="streamon" onclick="streamoff()">OFF</button>
+<script>
+  var lamp = $('#lamp');
+  lamp.showStatus = function(val) {
+    if (val == 1) {
+      $(this).html('ON');
+    } else if (val == 0) {
+      $(this).html('OFF');
+    }
+  }
+  var socket = io();
+  socket.on('command', function (data) {
+    console.log(data);
+    lamp.showStatus(data.devices[0].status);
+  });
+
+  function streamon() {
+    console.log('on');
+    socket.emit('streaming_request', {status: true});
+  }
+
+  function streamoff() {
+    console.log('off');
+    socket.emit('streaming_request', {status: false});
+  }
+</script>
